@@ -1,0 +1,13 @@
+INPUT(
+./release\main.o
+./release\dialog.o
+./release\game.o
+./release\ludo_player.o
+./release\ludo_player_random.o
+./release\ludo_player_evol.o
+./release\moc_dialog.o
+./release\moc_game.o
+./release\moc_ludo_player.o
+./release\moc_ludo_player_random.o
+./release\moc_ludo_player_evol.o
+);

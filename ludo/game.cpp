@@ -252,13 +252,17 @@ void game::turnComplete(bool win){
 
 void game::run() {
     if(DEBUG) std::cout << "color:     relative pos => fixed\n";
-    while(!game_complete){
-        if(turn_complete){
-            turn_complete = false;
-            msleep(game_delay/4);
-            next_turn(game_delay - game_delay/4);
+    for (auto i = 0; i < 20000; i++)
+    {
+        while(!game_complete){
+            if(turn_complete){
+                turn_complete = false;
+                msleep(game_delay/4);
+                next_turn(game_delay - game_delay/4);
+            }
         }
+        reset();
     }
+    msleep(2);
     emit close();
-    QThread::exit();
 }

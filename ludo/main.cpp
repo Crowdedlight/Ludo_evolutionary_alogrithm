@@ -13,13 +13,13 @@ int main(int argc, char *argv[]){
     qRegisterMetaType<positions_and_dice>();
 
     //instanciate the players here
-    ludo_player_evol p1, p2;
-    ludo_player_random p3, p4;
+    ludo_player_evol p1;
+    ludo_player_random p2, p3, p4;
 
     game g;
     g.setGameDelay(000); //if you want to see the game, set a delay
 
-    //* Add a GUI <-- remove the '/' to uncomment block
+    /* Add a GUI <-- remove the '/' to comment block
     Dialog w;
     QObject::connect(&g,SIGNAL(update_graphics(std::vector<int>)),&w,SLOT(update_graphics(std::vector<int>)));
     QObject::connect(&g,SIGNAL(set_color(int)),                   &w,SLOT(get_color(int)));
@@ -52,10 +52,14 @@ int main(int argc, char *argv[]){
     QObject::connect(&g, SIGNAL(player4_end(std::vector<int>)),    &p4,SLOT(post_game_analysis(std::vector<int>)));
     QObject::connect(&p4,SIGNAL(turn_complete(bool)),              &g, SLOT(turnComplete(bool)));
 
-    for(int i = 0; i < 10000; ++i){
-        g.start();
-        a.exec();
-        g.reset();
-    }
+//    for(int i = 0; i < 10000; ++i){
+//        g.start();
+//        a.exec();
+//        g.reset();
+//    }
+
+    g.start();
+    a.exec();
+
     return 0;
 }
