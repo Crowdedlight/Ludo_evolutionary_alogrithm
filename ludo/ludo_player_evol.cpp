@@ -1,6 +1,6 @@
-#include "ludo_player_random.h"
+#include "ludo_player_evol.h"
 
-ludo_player_random::ludo_player_random():
+ludo_player_evol::ludo_player_evol():
     pos_start_of_turn(16),
     pos_end_of_turn(16),
     dice_roll(0),
@@ -9,7 +9,7 @@ ludo_player_random::ludo_player_random():
 {
 }
 
-int ludo_player_random::make_decision(){
+int ludo_player_evol::make_decision(){
     std::vector<int> valid_moves;
     if(dice_roll == 6){
         for(int i = 0; i < 4; ++i){
@@ -35,14 +35,14 @@ int ludo_player_random::make_decision(){
     return valid_moves[select];
 }
 
-void ludo_player_random::start_turn(positions_and_dice relative){
+void ludo_player_evol::start_turn(positions_and_dice relative){
     pos_start_of_turn = relative.pos;
     dice_roll = relative.dice;
     int decision = make_decision();
     emit select_piece(decision);
 }
 
-void ludo_player_random::post_game_analysis(std::vector<int> relative_pos){
+void ludo_player_evol::post_game_analysis(std::vector<int> relative_pos){
     pos_end_of_turn = relative_pos;
     bool game_complete = true;
     for(int i = 0; i < 4; ++i){

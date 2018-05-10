@@ -10,7 +10,8 @@ game::game():
     rd(),
     gen(rd()),
     color(3),
-    player_positions({-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1})
+    player_positions({-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}),
+    player_wins({0,0,0,0})
 {
 }
 
@@ -243,7 +244,8 @@ void game::turnComplete(bool win){
     game_complete = win;
     turn_complete = true;
     if(game_complete){
-        std::cout << "player: " << color << " won" << std::endl;
+        player_wins[color]++;
+        std::cout << "player0: " << player_wins[0] << " wins, player1: " << player_wins[1] << " wins, player2: " << player_wins[2] << " wins, player3: " << player_wins[3] << " wins" << std::endl;
         emit declare_winner(color);
     }
 }

@@ -39,6 +39,7 @@ private:
 public:
     int color;
     std::vector<int> player_positions;
+    std::vector<int> player_wins;
     void rollDice(){
         std::uniform_int_distribution<> dis(1, 6);
         dice_result = dis(gen);
