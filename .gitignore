@@ -30,7 +30,7 @@
 *.app
 
 # Build folders
-build/
+build*/
 
 # QT Generated Files
 *.user
