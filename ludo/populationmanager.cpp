@@ -9,7 +9,7 @@ PopulationManager::PopulationManager():
     tournementSize(5),
     mutation_probability(10),
     mutation_range(0.5),
-    loadLastGeneration(false),
+    loadPrevGeneration(false),
     generationSaveLocation("../../generations/"),
     rd(),
     gen(rd())
