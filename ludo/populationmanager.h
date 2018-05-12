@@ -11,8 +11,41 @@ struct specimen
     std::vector<float> weights;
     int id;
     bool trained;
-    //no constructor as weights size is set as var
+
+
+    bool operator==(specimen a) const {
+          if(a.id==id)
+             return true;
+          else
+             return false;
+    }
 };
+
+
+namespace YAML {
+template<>
+struct convert<specimen> {
+  static Node encode(const specimen& rhs) {
+    Node node;
+    node.push_back(rhs.id);
+    node.push_back(rhs.wins);
+    node.push_back(rhs.weights);
+    return node;
+  }
+
+  static bool decode(const Node& node, specimen& rhs) {
+    if(!node.IsSequence() || node.size() != 3) {
+      return false;
+    }
+
+    rhs.id = node[0].as<int>();
+    rhs.wins = node[1].as<int>();
+    rhs.weights = node[2].as<std::vector<float>>();
+    return true;
+  }
+};
+}
+
 
 class PopulationManager : public QObject {
     Q_OBJECT
@@ -27,26 +60,29 @@ private:
     std::vector<specimen> population;
     int convergingPoint; //how many games is each specimen trained in
     int tournementSize;
-    float mutation_probability;
+    int mutation_probability;
     float mutation_range;
 
     //book keeping
     int currentTrainingIDX;
     int currentTrainingGame;
     int generationID;
-    bool loadLastGeneration;
+    bool loadPrevGeneration;
     std::string generationSaveLocation;
     void update(); // Gets run after each game, main
 
     int findNextNotTrainedSpecimen();
-    std::vector<float> getWeightsFromSpecimenID(int idx);
+    std::vector<float> getWeightsFromSpecimenIDX(int idx);
+    std::vector<float> getWeightsFromSpecimenID(int id);
 
     //Functions for evolution
     void evolveGeneration();
-    std::vector<int> makeTournement(); //does tournements and returns winners
-    std::vector<specimen> makeCrossOver(std::vector<int> parents);
+    std::vector<int> makeTournement(int offsprings); //does tournements and returns winners
+    std::vector<specimen> makeCrossOver(std::vector<int> parents, int amount);
     std::vector<specimen> makeMutation(std::vector<specimen> offsprings);
     int findWeakestSpecimen();
+    specimen makeChild(int dad_id, int mum_id);
+
 
     //Saving out generations and loading them
     void loadLastGeneration();

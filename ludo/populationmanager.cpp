@@ -6,8 +6,8 @@ PopulationManager::PopulationManager():
     pop_size(20),
     specimen_weights_num(8),
     convergingPoint(500),
-    tournementSize(6),
-    mutation_probability(0.1),
+    tournementSize(5),
+    mutation_probability(10),
     mutation_range(0.5),
     loadLastGeneration(false),
     generationSaveLocation("../../generations/"),
@@ -42,7 +42,7 @@ PopulationManager::PopulationManager():
 
     //assign first specimen to game and start training
     int index = findNextNotTrainedSpecimen();
-    std::vector<float> weights = getWeightsFromSpecimenID(index);
+    std::vector<float> weights = getWeightsFromSpecimenIDX(index);
     currentTrainingGame = 0;
     currentTrainingIDX = index;
     emit changeSpecimen(weights);
@@ -70,7 +70,7 @@ void PopulationManager::update()
         {
             //Start training next specimen
             currentTrainingIDX = nextSpecimen;
-            std::vector<float> weights = getWeightsFromSpecimenID(nextSpecimen);
+            std::vector<float> weights = getWeightsFromSpecimenIDX(nextSpecimen);
             emit changeSpecimen(weights);
         }
     }
@@ -87,11 +87,15 @@ void PopulationManager::evolveGeneration()
     //Save current generation to yaml file
     saveCurrentGeneration();
 
+    //Determine amount of offsprings => 10%-20% new offspring per generation
+    std::uniform_int_distribution<> offspringNum(pop_size/10, pop_size/5);
+    int offspring_amount = offspringNum(gen);
+
     //SELECTION - Tournement style - Returns ID and not index of winners
-    std::vector<int> parents = makeTournement();
+    std::vector<int> parents = makeTournement(offspring_amount);
 
     //CROSSOVER - random uniform selection - Returns the new offsprings
-    std::vector<specimen> offsprings = makeCrossOver(parents);
+    std::vector<specimen> offsprings = makeCrossOver(parents, offspring_amount);
 
     //MUTATION - random mutations on new offsprings
     offsprings = makeMutation(offsprings);
@@ -127,29 +131,112 @@ int PopulationManager::findWeakestSpecimen()
 void PopulationManager::saveCurrentGeneration()
 {
     //Save to yaml file with current genereationID
+    YAML::Node config;// = YAML::LoadFile("Generation" + generationID + ".yaml");
+
+    //save every specimen
+    for (auto i = 0; i < population.size(); i++)
+    {
+        config[i] = population[i];
+    }
+
+    std::ofstream fout(generationSaveLocation + "Generation" + generationID + ".yaml");
+    fout << config;
 }
 
 std::vector<specimen> PopulationManager::makeMutation(std::vector<specimen> offsprings)
 {
+    std::uniform_int_distribution<> mutateRoll(0, 100);
+    std::uniform_real_distribution<> mutateAmount(-mutation_range, mutation_range);
 
+    //go though each child and each child weight
+    for(auto & child : offsprings)
+    {
+        for (auto & weight : child.weights)
+        {
+            //check if mutation
+            int mutate = mutateRoll(gen);
+            if (mutate <= 10)
+            {
+                //mutate
+                float mutation_value = mutateAmount(gen);
+                weight += mutation_value;
+            }
+        }
+    }
+    return offsprings;
 }
 
-std::vector<specimen> PopulationManager::makeCrossOver(std::vector<int> parents)
+std::vector<specimen> PopulationManager::makeCrossOver(std::vector<int> parents, int amount)
 {
+    //cross every parent with every parent then randomly select childs until enough offspring is produced
+    std::vector<specimen> childs;
+    for(auto i = 0; i < parents.size(); i++)
+    {
+        //dad Id
+        int dad_id = parents[i];
+        for (auto j = 0; j < parents.size(); j++)
+        {
+            // can't cross myself
+            if (dad_id == parents[j])
+                continue;
 
+            specimen child = makeChild(dad_id, parents[j]);
+            childs.push_back(child);
+        }
+    }
+
+    //randomly selects childs until offspring vector is full => Not all childs survive
+    std::vector<specimen> outChilds(amount);
+    for (auto i = 0; i < outChilds.size(); i++)
+    {
+        std::uniform_int_distribution<> childSelect(0, childs.size());
+        int index = childSelect(gen);
+
+        //save child as offspring and remove from possibe list
+        outChilds[i] = childs[index];
+        childs.erase(childs.begin() + index);
+    }
+
+    return outChilds;
 }
 
-std::vector<int> PopulationManager::makeTournement()
+specimen PopulationManager::makeChild(int dad_id, int mum_id)
 {
-    //steady state crossover, 10%-20% new offspring per generation
-    std::uniform_int_distribution<> offspringNum(pop_size/10, pop_size/5);
-    int offsprings = offspringNum(gen);
+    std::vector<float> dad_w = getWeightsFromSpecimenID(dad_id);
+    std::vector<float> mum_w = getWeightsFromSpecimenID(mum_id);
+    std::uniform_int_distribution<> who(0,1);
 
-    //make as many tournements as offsprings
+    std::vector<float> child_w(specimen_weights_num);
+
+    for (auto i = 0; i < child_w.size(); i++)
+    {
+        //who to take from? 1 == dad, 0 == mum
+        int parent = who(gen);
+        if (parent == 1)
+            child_w[i] = dad_w[i];
+        else
+            child_w[i] = mum_w[i];
+    }
+
+    specimen child;
+    child.id = id_counter;
+    child.trained = false;
+    child.weights = child_w;
+    child.wins = 0;
+
+    id_counter++;
+
+    return child;
+}
+
+std::vector<int> PopulationManager::makeTournement(int offsprings)
+{
+    //make double as many tournements as offsprings.
     std::vector<int> winners;
     std::vector<specimen> specimenList = population;
 
-    for (auto i = 0; i < offsprings; i++)
+    //always have at least 2 parents TODO for low offsprings handling. Max amount of 6 parents from population of 20 => 120 possible childs
+    for (auto i = 0; i < offsprings+2; i++)
     {
         //select randoms for tournement
         std::uniform_int_distribution<> tournement_select(0, specimenList.size());
@@ -209,7 +296,16 @@ int PopulationManager::findNextNotTrainedSpecimen()
     return -1;
 }
 
-std::vector<float> PopulationManager::getWeightsFromSpecimenID(int idx)
+std::vector<float> PopulationManager::getWeightsFromSpecimenID(int id)
+{
+    for (auto i = 0; i < population.size(); i++)
+    {
+        if (population[i].id == id)
+            return population[i].weights;
+    }
+}
+
+std::vector<float> PopulationManager::getWeightsFromSpecimenIDX(int idx)
 {
     return population[idx].weights;
 }
