@@ -11,8 +11,6 @@ private:
     std::vector<int> pos_end_of_turn;
     std::vector<float> weights;
     int dice_roll;
-    std::random_device rd;
-    std::mt19937 gen;
 
     //copy paste to check new moves positions
     int isStar(int index);
@@ -33,19 +31,16 @@ private:
     int getCanMoveToGoal(int pos);
     int getRiskOfKill(int pos, int piece);
 
-
-    // Specimen stuff
-    std::vector<float> changeSpecimen(std::vector<float> newSpecimen); //returns old specimen weights. Might not be needed if post processing happens in handler
-
-
 public:
     ludo_player_evol();
 signals:
     void select_piece(int);
     void turn_complete(bool);
+    void SpecimenChanged();
 public slots:
     void start_turn(positions_and_dice relative);
     void post_game_analysis(std::vector<int> relative_pos);
+    void changeSpecimen(std::vector<float> newSpecimen);
 };
 
 #endif // LUDO_PLAYER_EVOL_H

@@ -18,6 +18,7 @@ class game : public QThread
 private:
     bool game_complete;
     bool turn_complete;
+    bool start_next_game;
     unsigned int game_delay;
     positions_and_dice relative;
     int dice_result;
@@ -68,6 +69,9 @@ signals:
 public slots:
     void turnComplete(bool win);
     void movePiece(int relative_piece); //check game rules
+
+    //custom slot for control of dataflow for training purpose
+    void runNextGame(bool run);
 protected:
     void run();
 };

@@ -5,6 +5,7 @@
 #include "ludo_player_evol.h"
 #include "ludo_player_random.h"
 #include "positions_and_dice.h"
+#include "populationmanager.h"
 
 Q_DECLARE_METATYPE( positions_and_dice )
 
@@ -15,6 +16,8 @@ int main(int argc, char *argv[]){
     //instanciate the players here
     ludo_player_evol p1;
     ludo_player_random p2, p3, p4;
+
+    PopulationManager pm;
 
     game g;
     g.setGameDelay(000); //if you want to see the game, set a delay
@@ -52,12 +55,14 @@ int main(int argc, char *argv[]){
     QObject::connect(&g, SIGNAL(player4_end(std::vector<int>)),    &p4,SLOT(post_game_analysis(std::vector<int>)));
     QObject::connect(&p4,SIGNAL(turn_complete(bool)),              &g, SLOT(turnComplete(bool)));
 
-//    for(int i = 0; i < 10000; ++i){
-//        g.start();
-//        a.exec();
-//        g.reset();
-//    }
 
+    //setup for populationmanager
+    QObject::connect(&pm, SIGNAL(next_game(bool)),                       &g,SLOT(runNextGame(bool)));
+    QObject::connect(&g,  SIGNAL(declare_winner(int)),                   &pm,SLOT(get_winner(int)));
+    QObject::connect(&pm, SIGNAL(changeSpecimen(std::vector<float>)),    &p1,SLOT(changeSpecimen(std::vector<float>)));
+    QObject::connect(&p1, SIGNAL(SpecimenChanged()),                     &pm,SLOT(specimenChanged()));
+
+    // start game loop in thread
     g.start();
     a.exec();
 

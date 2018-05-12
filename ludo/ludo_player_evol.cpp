@@ -208,13 +208,13 @@ int ludo_player_evol::getMovedDistance(int oldPos, int newPos)
         return abs(newPos-oldPos);
 }
 
-std::vector<float> ludo_player_evol::changeSpecimen(std::vector<float> newSpecimen)
+void ludo_player_evol::changeSpecimen(std::vector<float> newSpecimen)
 {
-    //Save weights and return to specimenhandler?
-    auto lastWeight = weights;
+    //replace weights and emit signal that it is changed
+    //populationManagers responsibility to know what specimen is testing currently
     weights.clear();
     weights = newSpecimen;
-    return lastWeight;
+    emit SpecimenChanged();
 }
 
 int ludo_player_evol::isStar(int index){

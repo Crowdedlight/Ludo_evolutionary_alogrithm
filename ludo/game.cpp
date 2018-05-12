@@ -2,7 +2,7 @@
 #define DEBUG 0
 
 game::game():
-    game_complete(false),
+    game_complete(true),
     turn_complete(true),
     game_delay(1000),
     relative(),
@@ -11,7 +11,8 @@ game::game():
     gen(rd()),
     color(3),
     player_positions({-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}),
-    player_wins({0,0,0,0})
+    player_wins({0,0,0,0}),
+    start_next_game(false)
 {
 }
 
@@ -261,8 +262,20 @@ void game::run() {
                 next_turn(game_delay - game_delay/4);
             }
         }
+        // only reset and go for next game if allowed by population manager ==> Flow control
+        while (!start_next_game) {};
+        /*
+        if (start_next_game)
+        {*/
         reset();
+        start_next_game = false;
+//        }
+
     }
     msleep(2);
     emit close();
+}
+
+void game::runNextGame(bool run){
+    start_next_game = run;
 }
