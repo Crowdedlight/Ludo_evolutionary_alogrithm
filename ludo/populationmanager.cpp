@@ -139,7 +139,8 @@ void PopulationManager::saveCurrentGeneration()
         config[i] = population[i];
     }
 
-    std::ofstream fout(generationSaveLocation + "Generation" + generationID + ".yaml");
+    std::string filename = generationSaveLocation + "Generation" + generationID + ".yaml";
+    std::ofstream fout(filename);
     fout << config;
 }
 
@@ -290,7 +291,7 @@ int PopulationManager::findNextNotTrainedSpecimen()
 {
     for (auto i = 0; i < population.size(); i++)
     {
-        if (population[id].trained == false)
+        if (population[i].trained == false)
             return i;
     }
     return -1;

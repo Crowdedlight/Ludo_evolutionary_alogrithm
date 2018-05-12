@@ -2,6 +2,7 @@
 #define POPULATIONMANAGER_H
 #include <QObject>
 #include <iostream>
+#include <fstream>
 #include <random>
 #include "yaml-cpp/yaml.h"
 

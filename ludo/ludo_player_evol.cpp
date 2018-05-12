@@ -4,9 +4,7 @@ ludo_player_evol::ludo_player_evol():
     pos_start_of_turn(16),
     pos_end_of_turn(16),
     dice_roll(0),
-    weights(8),
-    rd(),
-    gen(rd())
+    weights(8)
 {
     // randomly assign weights. TODO move to let PopulationManager handle that. This only plays and saves performance score, Manager handles all loading and saving to files
     //test
