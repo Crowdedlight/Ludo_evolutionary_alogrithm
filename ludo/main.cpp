@@ -62,6 +62,9 @@ int main(int argc, char *argv[]){
     QObject::connect(&pm, SIGNAL(changeSpecimen(std::vector<float>)),    &p1,SLOT(changeSpecimen(std::vector<float>)));
     QObject::connect(&p1, SIGNAL(SpecimenChanged()),                     &pm,SLOT(specimenChanged()));
 
+    //init populationmanager now everything is created and set
+    pm.init();
+
     // start game loop in thread
     g.start();
     a.exec();

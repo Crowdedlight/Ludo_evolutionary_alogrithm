@@ -246,13 +246,14 @@ void game::turnComplete(bool win){
     turn_complete = true;
     if(game_complete){
         player_wins[color]++;
-        std::cout << "player0: " << player_wins[0] << " wins, player1: " << player_wins[1] << " wins, player2: " << player_wins[2] << " wins, player3: " << player_wins[3] << " wins" << std::endl;
+        //std::cout << "player0: " << player_wins[0] << " wins, player1: " << player_wins[1] << " wins, player2: " << player_wins[2] << " wins, player3: " << player_wins[3] << " wins" << std::endl;
         emit declare_winner(color);
     }
 }
 
 void game::run() {
     if(DEBUG) std::cout << "color:     relative pos => fixed\n";
+
     for (auto i = 0; i < 20000; i++)
     {
         while(!game_complete){

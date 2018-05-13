@@ -30,11 +30,10 @@ HEADERS  += dialog.h \
 
 FORMS    += dialog.ui
 
-QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Wunused
+QMAKE_CXXFLAGS += -std=c++14 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Wunused
 
-
-INCLUDEPATH += $$PWD/yaml-cpp/
-LIBS += -L$$PWD/libs/ -lyaml-cpp
+#INCLUDEPATH += $$_PRO_FILE_PWD_/yaml-cpp/
+#LIBS += -L$$PWD/libs/ -lyaml-cpp
 
 #win32 {
 #    #/* If you compile with QtCreator/gcc: */
@@ -54,3 +53,11 @@ LIBS += -L$$PWD/libs/ -lyaml-cpp
 
 #INCLUDEPATH += $$PWD/libs
 #DEPENDPATH += $$PWD/libs
+
+#unix:!macx|win32: LIBS += -L$$PWD/libs/ -lyaml-cpp
+
+
+unix|win32: LIBS += -L$$PWD/libs/ -lyaml-cpp
+
+INCLUDEPATH += $$PWD/include
+DEPENDPATH += $$PWD/include

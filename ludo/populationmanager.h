@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <random>
-#include "yaml-cpp/yaml.h"
+#include <yaml-cpp/yaml.h>
 
 struct specimen
 {
@@ -52,6 +52,7 @@ class PopulationManager : public QObject {
     Q_OBJECT
 public:
     PopulationManager();
+    void init();
 
 private:
     //population parameters
@@ -92,7 +93,6 @@ private:
     // misc
     std::random_device rd;
     std::mt19937 gen;
-
 
 signals:
     void next_game(bool);

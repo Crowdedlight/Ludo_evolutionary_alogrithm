@@ -3,16 +3,20 @@
 PopulationManager::PopulationManager():
     id_counter(0),
     generationID(0),
-    pop_size(20),
+    pop_size(40),
     specimen_weights_num(8),
     convergingPoint(500),
     tournementSize(5),
     mutation_probability(10),
     mutation_range(0.5),
     loadPrevGeneration(false),
-    generationSaveLocation("../../generations/"),
+    generationSaveLocation("../generations/"),
     rd(),
     gen(rd())
+{
+}
+
+void PopulationManager::init()
 {
     //Determine to load or make new population randomly
     // TODO LOAD OR GENERATE
@@ -45,6 +49,7 @@ PopulationManager::PopulationManager():
     std::vector<float> weights = getWeightsFromSpecimenIDX(index);
     currentTrainingGame = 0;
     currentTrainingIDX = index;
+    std::cout << "init_population()" << std::endl;
     emit changeSpecimen(weights);
 }
 
@@ -65,6 +70,14 @@ void PopulationManager::update()
         {
             //evolve generation
             evolveGeneration();
+
+            std::cout << "Training generation: " << std::to_string(generationID) << std::endl;
+
+            //start new training for new generation
+            nextSpecimen = findNextNotTrainedSpecimen();
+            currentTrainingIDX = nextSpecimen;
+            std::vector<float> weights = getWeightsFromSpecimenIDX(nextSpecimen);
+            emit changeSpecimen(weights);
         }
         else
         {
@@ -84,6 +97,8 @@ void PopulationManager::update()
 
 void PopulationManager::evolveGeneration()
 {
+    std::cout << "Evolving Generation " << generationID << std::endl;
+
     //Save current generation to yaml file
     saveCurrentGeneration();
 
@@ -111,7 +126,6 @@ void PopulationManager::evolveGeneration()
     }
 
     generationID++;
-
 }
 
 int PopulationManager::findWeakestSpecimen()
@@ -131,19 +145,28 @@ int PopulationManager::findWeakestSpecimen()
 void PopulationManager::saveCurrentGeneration()
 {
     //Save to yaml file with current genereationID
-    YAML::Node config;// = YAML::LoadFile("Generation" + generationID + ".yaml");
+    YAML::Node config;
+
+    //top node save vector of winrates for specimen for quick overview
+    std::vector<float> winrates_specimens;
+    for (auto i : population)
+    {
+        float winrate = i.wins/convergingPoint;
+        winrates_specimens.push_back(winrate);
+    }
+    config["win-rate"] = winrates_specimens;
 
     //save every specimen
-//    for (auto i = 0; i < population.size(); i++)
-//    {
-//        config.push_back(population[i]);
-//    }
+    for (auto i = 0; i < population.size(); i++)
+    {
+        config.push_back(population[i]);
+    }
 
-    config["test"].push_back(4); //population[0];
+    std::string filename = generationSaveLocation + "Generation" + std::to_string(generationID) + ".yaml";
+    std::ofstream fout(filename);
+    fout << config;
 
-//    std::string filename = generationSaveLocation + "Generation" + std::to_string(generationID) + ".yaml";
-//    std::ofstream fout(filename);
-//    fout << config;
+    std::cout << "saved generation " << std::to_string(generationID) << std::endl;
 }
 
 std::vector<specimen> PopulationManager::makeMutation(std::vector<specimen> offsprings)
@@ -192,7 +215,7 @@ std::vector<specimen> PopulationManager::makeCrossOver(std::vector<int> parents,
     std::vector<specimen> outChilds(amount);
     for (auto i = 0; i < outChilds.size(); i++)
     {
-        std::uniform_int_distribution<> childSelect(0, childs.size());
+        std::uniform_int_distribution<> childSelect(0, childs.size()-1);
         int index = childSelect(gen);
 
         //save child as offspring and remove from possibe list
@@ -242,11 +265,11 @@ std::vector<int> PopulationManager::makeTournement(int offsprings)
     for (auto i = 0; i < offsprings+2; i++)
     {
         //select randoms for tournement
-        std::uniform_int_distribution<> tournement_select(0, specimenList.size());
+        std::uniform_int_distribution<> tournement_select(0, specimenList.size()-1);
         std::vector<specimen> tourneList;
 
         //pick random people to participate in tournement
-        for (auto i = 0; i < tournementSize; i++)
+        for (auto j = 0; j < tournementSize; j++)
         {
             int index = tournement_select(gen);
             tourneList.push_back(specimenList[index]);
@@ -256,12 +279,12 @@ std::vector<int> PopulationManager::makeTournement(int offsprings)
         int winner = -1;
         int winner_idx = -1;
         int winFitValue = -1;
-        for (auto i = 0; i < tourneList.size(); i++)
+        for (auto n = 0; n < tourneList.size(); n++)
         {
-            if (tourneList[i].wins > winFitValue)
+            if (tourneList[n].wins > winFitValue)
             {
-                winner = tourneList[i].id;
-                winner_idx = i;
+                winner = tourneList[n].id;
+                winner_idx = n;
             }
         }
 
