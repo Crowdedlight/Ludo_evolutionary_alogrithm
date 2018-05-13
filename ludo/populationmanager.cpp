@@ -134,14 +134,16 @@ void PopulationManager::saveCurrentGeneration()
     YAML::Node config;// = YAML::LoadFile("Generation" + generationID + ".yaml");
 
     //save every specimen
-    for (auto i = 0; i < population.size(); i++)
-    {
-        config[i] = population[i];
-    }
+//    for (auto i = 0; i < population.size(); i++)
+//    {
+//        config.push_back(population[i]);
+//    }
 
-    std::string filename = generationSaveLocation + "Generation" + generationID + ".yaml";
-    std::ofstream fout(filename);
-    fout << config;
+    config["test"].push_back(4); //population[0];
+
+//    std::string filename = generationSaveLocation + "Generation" + std::to_string(generationID) + ".yaml";
+//    std::ofstream fout(filename);
+//    fout << config;
 }
 
 std::vector<specimen> PopulationManager::makeMutation(std::vector<specimen> offsprings)

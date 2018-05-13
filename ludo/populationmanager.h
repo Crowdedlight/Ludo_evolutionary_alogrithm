@@ -28,9 +28,9 @@ template<>
 struct convert<specimen> {
   static Node encode(const specimen& rhs) {
     Node node;
-    node.push_back(rhs.id);
-    node.push_back(rhs.wins);
-    node.push_back(rhs.weights);
+    node["id"] = rhs.id;
+    node["wins"] = rhs.wins;
+    node["weights"] = rhs.weights;
     return node;
   }
 
@@ -39,9 +39,9 @@ struct convert<specimen> {
       return false;
     }
 
-    rhs.id = node[0].as<int>();
-    rhs.wins = node[1].as<int>();
-    rhs.weights = node[2].as<std::vector<float>>();
+    rhs.id = node["id"].as<int>();
+    rhs.wins = node["wins"].as<int>();
+    rhs.weights = node["weights"].as<std::vector<float>>();
     return true;
   }
 };

@@ -13,7 +13,7 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        dialog.cpp \
+    dialog.cpp \
     game.cpp \
     ludo_player.cpp \
     ludo_player_random.cpp \
@@ -32,10 +32,25 @@ FORMS    += dialog.ui
 
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Wunused
 
-win32: LIBS += -L$$PWD/./ -lyaml-cpp
 
-INCLUDEPATH += $$PWD/.
-DEPENDPATH += $$PWD/.
+INCLUDEPATH += $$PWD/yaml-cpp/
+LIBS += -L$$PWD/libs/ -lyaml-cpp
 
-win32:!win32-g++: PRE_TARGETDEPS += $$PWD/./yaml-cpp.lib
-else:win32-g++: PRE_TARGETDEPS += $$PWD/./libyaml-cpp.a
+#win32 {
+#    #/* If you compile with QtCreator/gcc: */
+#    win32-g++:LIBS += -L"$$_PRO_FILE_PWD_/libs/"
+#    win32-g++:LIBS += -lyaml-cpp
+
+#    #/* IF you compile with MSVC:
+#    #win32-msvc:LIBS += /path/to/your/libMyLib.lib*/
+#}
+#macx {
+#    LIBS += -L"$$_PRO_FILE_PWD_/libs/"
+#    LIBS += -lyaml-cpp
+#}
+
+
+#unix:!macx|win32: LIBS += -L$$PWD/libs/ -lyaml-cpp
+
+#INCLUDEPATH += $$PWD/libs
+#DEPENDPATH += $$PWD/libs
