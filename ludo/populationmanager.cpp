@@ -3,12 +3,12 @@
 PopulationManager::PopulationManager():
     id_counter(0),
     generationID(0),
-    pop_size(50),
+    pop_size(40),
     specimen_weights_num(8),
-    convergingPoint(250),
+    convergingPoint(500),
     tournementSize(10),
     mutation_probability(15), //was 10 before
-    mutation_range(1), //was 0.5% before
+    mutation_range(0.5), //was 0.5% before
     loadPrevGeneration(false),
     generationSaveLocation("../generations/"),
     rd(),

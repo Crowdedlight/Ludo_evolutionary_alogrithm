@@ -246,7 +246,7 @@ void game::turnComplete(bool win){
     turn_complete = true;
     if(game_complete){
         player_wins[color]++;
-        //std::cout << "player0: " << player_wins[0] << " wins, player1: " << player_wins[1] << " wins, player2: " << player_wins[2] << " wins, player3: " << player_wins[3] << " wins" << std::endl;
+//        std::cout << "player0: " << player_wins[0] << " wins, player1: " << player_wins[1] << " wins, player2: " << player_wins[2] << " wins, player3: " << player_wins[3] << " wins" << std::endl;
         emit declare_winner(color);
     }
 }
@@ -254,7 +254,8 @@ void game::turnComplete(bool win){
 void game::run() {
     if(DEBUG) std::cout << "color:     relative pos => fixed\n";
 
-    while(true) // TODO add termination condition of amount of generations or delta of improvement from generation to generation
+    int i = 0;
+    while(i < 20000) // TODO add termination condition of amount of generations or delta of improvement from generation to generation
     {
         while(!game_complete){
             if(turn_complete){
@@ -265,13 +266,9 @@ void game::run() {
         }
         // only reset and go for next game if allowed by population manager ==> Flow control
         while (!start_next_game) {};
-        /*
-        if (start_next_game)
-        {*/
         reset();
         start_next_game = false;
-//        }
-
+        i++;
     }
     msleep(2);
     emit close();

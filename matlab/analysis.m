@@ -19,6 +19,11 @@ winrate_top = zeros(length(subFolders));
 
 figure;
 hold on;
+%Axises
+xlabel('Generation');
+ylabel('Win Rate');
+
+
 
 for ds = subFolders'
     
@@ -48,7 +53,22 @@ for ds = subFolders'
         i = i+1;
     end
     
-    plot(winrate);
-    plot(winrate_avg);
+    plot(winrate*100);
+    plot(winrate_avg*100);   
 
 end
+
+    % sort out legend
+    N = length(subFolders);
+    Legend=cell(N*2,1)
+    NN = 1;
+    for iter=1:2:N*2
+        name = subFolders(NN).name;
+        NN = NN + 1;
+        Legend{iter}=strcat('best - ', name);
+        Legend{iter+1}=strcat('avg - ', name);
+    end
+    
+    legend(Legend,'Location','southeast');
+    
+    

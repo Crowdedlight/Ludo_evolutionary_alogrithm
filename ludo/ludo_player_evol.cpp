@@ -6,16 +6,35 @@ ludo_player_evol::ludo_player_evol():
     dice_roll(0),
     weights(8)
 {
-    // randomly assign weights. TODO move to let PopulationManager handle that. This only plays and saves performance score, Manager handles all loading and saving to files
-    //test
-    weights[0] = 1;
-    weights[1] = 2;
-    weights[2] = 1.6;
-    weights[3] = 50;
-    weights[4] = 1.5;
-    weights[5] = 100;
-    weights[6] = 0.4;
-    weights[7] = 3.4;
+    //test - Set by myself
+//    weights[0] = 1;
+//    weights[1] = 2;
+//    weights[2] = 1.6;
+//    weights[3] = 50;
+//    weights[4] = 1.5;
+//    weights[5] = 100;
+//    weights[6] = 0.4;
+//    weights[7] = 3.4;
+
+    //pop50_50games_low_birth_10mutation_86winrate - Best player
+//    weights[0] = 1.611493;
+//    weights[1] = 1.022606;
+//    weights[2] = 2.497674;
+//    weights[3] = 19.93164;
+//    weights[4] = 6.353284;
+//    weights[5] = 18.41696;
+//    weights[6] = 0.7632493;
+//    weights[7] = 6.099042;
+
+    //pop50_250games_high_birth_5mutation_81winrate
+    weights[0] = 0.3336691;
+    weights[1] = -0.6562978;
+    weights[2] = 1.713695;
+    weights[3] = 17.35723;
+    weights[4] = 4.465443;
+    weights[5] = 7.512275;
+    weights[6] = 1.168676;
+    weights[7] = -0.8972499;
 }
 
 int ludo_player_evol::make_decision(){
