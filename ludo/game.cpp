@@ -254,7 +254,7 @@ void game::turnComplete(bool win){
 void game::run() {
     if(DEBUG) std::cout << "color:     relative pos => fixed\n";
 
-    for (auto i = 0; i < 20000; i++)
+    while(true) // TODO add termination condition of amount of generations or delta of improvement from generation to generation
     {
         while(!game_complete){
             if(turn_complete){

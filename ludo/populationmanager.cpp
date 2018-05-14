@@ -3,12 +3,12 @@
 PopulationManager::PopulationManager():
     id_counter(0),
     generationID(0),
-    pop_size(40),
+    pop_size(50),
     specimen_weights_num(8),
-    convergingPoint(500),
-    tournementSize(5),
-    mutation_probability(10),
-    mutation_range(0.5),
+    convergingPoint(250),
+    tournementSize(10),
+    mutation_probability(15), //was 10 before
+    mutation_range(1), //was 0.5% before
     loadPrevGeneration(false),
     generationSaveLocation("../generations/"),
     rd(),
@@ -37,6 +37,7 @@ void PopulationManager::init()
         sm.id = id_counter;
         sm.weights = newW;
         sm.wins = 0;
+        sm.winrate = 0;
         sm.trained = false;
 
         population.push_back(sm);
@@ -71,7 +72,7 @@ void PopulationManager::update()
             //evolve generation
             evolveGeneration();
 
-            std::cout << "Training generation: " << std::to_string(generationID) << std::endl;
+            //std::cout << "Training generation: " << std::to_string(generationID) << std::endl;
 
             //start new training for new generation
             nextSpecimen = findNextNotTrainedSpecimen();
@@ -97,13 +98,13 @@ void PopulationManager::update()
 
 void PopulationManager::evolveGeneration()
 {
-    std::cout << "Evolving Generation " << generationID << std::endl;
+    //std::cout << "Evolving Generation " << generationID << std::endl;
 
     //Save current generation to yaml file
     saveCurrentGeneration();
 
-    //Determine amount of offsprings => 10%-20% new offspring per generation
-    std::uniform_int_distribution<> offspringNum(pop_size/10, pop_size/5);
+    //Determine amount of offsprings => 20%-50% new offspring per generation
+    std::uniform_int_distribution<> offspringNum(pop_size/5, pop_size/2);
     int offspring_amount = offspringNum(gen);
 
     //SELECTION - Tournement style - Returns ID and not index of winners
@@ -147,19 +148,30 @@ void PopulationManager::saveCurrentGeneration()
     //Save to yaml file with current genereationID
     YAML::Node config;
 
+    //sort population with biggest winrate first
+    std::sort(population.begin(),
+              population.end(),
+              [](const specimen& lhs, const specimen& rhs)
+    {
+        return lhs.winrate > rhs.winrate;
+    });
+
     //top node save vector of winrates for specimen for quick overview
     std::vector<float> winrates_specimens;
-    for (auto i : population)
-    {
-        float winrate = i.wins/convergingPoint;
-        winrates_specimens.push_back(winrate);
-    }
+    //lambda expression of transform to get vector of only winrates
+    std::transform(population.begin(), population.end(), std::back_inserter(winrates_specimens),
+                   [](specimen const& x) { return x.winrate; });
+
     config["win-rate"] = winrates_specimens;
+
+
+    //output best winrate in generation for progress monitoring
+    std::cout << "Generation " << std::to_string(generationID) << " : " << std::to_string(population.front().winrate) << " -- " << std::to_string(population.back().winrate) << std::endl;
 
     //save every specimen
     for (auto i = 0; i < population.size(); i++)
     {
-        config.push_back(population[i]);
+        config["population"].push_back(population[i]);
     }
 
     std::string filename = generationSaveLocation + "Generation" + std::to_string(generationID) + ".yaml";
@@ -249,6 +261,7 @@ specimen PopulationManager::makeChild(int dad_id, int mum_id)
     child.trained = false;
     child.weights = child_w;
     child.wins = 0;
+    child.winrate = 0;
 
     id_counter++;
 
@@ -306,7 +319,11 @@ void PopulationManager::get_winner(int color)
 {
     //if winner is player1, increment win counter
     if (color == 0)
+    {
         population[currentTrainingIDX].wins++;
+        int wins = population[currentTrainingIDX].wins;
+        population[currentTrainingIDX].winrate = (float)wins/(float) convergingPoint;
+    }
 
     //main update loop
     update();

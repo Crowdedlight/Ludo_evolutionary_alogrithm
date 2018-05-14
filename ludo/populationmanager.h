@@ -9,6 +9,7 @@
 struct specimen
 {
     int wins;
+    float winrate;
     std::vector<float> weights;
     int id;
     bool trained;
@@ -23,6 +24,8 @@ struct specimen
 };
 
 
+
+
 namespace YAML {
 template<>
 struct convert<specimen> {
@@ -30,17 +33,19 @@ struct convert<specimen> {
     Node node;
     node["id"] = rhs.id;
     node["wins"] = rhs.wins;
+    node["win_rate"] = rhs.winrate;
     node["weights"] = rhs.weights;
     return node;
   }
 
   static bool decode(const Node& node, specimen& rhs) {
-    if(!node.IsSequence() || node.size() != 3) {
+    if(!node.IsSequence() || node.size() != 4) {
       return false;
     }
 
     rhs.id = node["id"].as<int>();
     rhs.wins = node["wins"].as<int>();
+    rhs.winrate = node["win_rate"].as<float>();
     rhs.weights = node["weights"].as<std::vector<float>>();
     return true;
   }
