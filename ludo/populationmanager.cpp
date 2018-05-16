@@ -3,9 +3,9 @@
 PopulationManager::PopulationManager():
     id_counter(0),
     generationID(0),
-    pop_size(40),
-    specimen_weights_num(8),
-    convergingPoint(500),
+    pop_size(50),
+    specimen_weights_num(10),
+    convergingPoint(400),
     tournementSize(10),
     mutation_probability(15), //was 10 before
     mutation_range(0.5), //was 0.5% before

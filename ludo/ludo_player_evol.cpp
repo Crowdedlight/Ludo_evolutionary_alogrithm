@@ -4,7 +4,7 @@ ludo_player_evol::ludo_player_evol():
     pos_start_of_turn(16),
     pos_end_of_turn(16),
     dice_roll(0),
-    weights(8)
+    weights(10)
 {
     //test - Set by myself
 //    weights[0] = 1;
@@ -16,25 +16,28 @@ ludo_player_evol::ludo_player_evol():
 //    weights[6] = 0.4;
 //    weights[7] = 3.4;
 
-    //pop50_50games_low_birth_10mutation_86winrate - Best player
-//    weights[0] = 1.611493;
-//    weights[1] = 1.022606;
-//    weights[2] = 2.497674;
-//    weights[3] = 19.93164;
-//    weights[4] = 6.353284;
-//    weights[5] = 18.41696;
-//    weights[6] = 0.7632493;
-//    weights[7] = 6.099042;
+    //pop50_100games_high_birth_10mutation_87winrate - New State space => random => 72% win => better_player => 58% (even with 40000 games)
+    weights[0] = 0.9876136;
+    weights[1] = 2.182484;
+    weights[2] = 0.4729599;
+    weights[3] = 16.68211;
+    weights[4] = 8.582215;
+    weights[5] = 18.25736;
+    weights[6] = 1.579915;
+    weights[7] = 2.771717;
+    weights[8] = 2.537776;
+    weights[9] = 9.984499;
+
 
     //pop50_250games_high_birth_5mutation_81winrate
-    weights[0] = 0.3336691;
-    weights[1] = -0.6562978;
-    weights[2] = 1.713695;
-    weights[3] = 17.35723;
-    weights[4] = 4.465443;
-    weights[5] = 7.512275;
-    weights[6] = 1.168676;
-    weights[7] = -0.8972499;
+//    weights[0] = 0.3336691;
+//    weights[1] = -0.6562978;
+//    weights[2] = 1.713695;
+//    weights[3] = 17.35723;
+//    weights[4] = 4.465443;
+//    weights[5] = 7.512275;
+//    weights[6] = 1.168676;
+//    weights[7] = -0.8972499;
 }
 
 int ludo_player_evol::make_decision(){
@@ -67,6 +70,8 @@ int ludo_player_evol::make_decision(){
         weighted_moves[i] += weights[5] * getKilledByPlayer(newPos);
         weighted_moves[i] += weights[6] * getRiskOfKill(newPos, i);
         weighted_moves[i] += weights[7] * getCanMoveToGoal(newPos);
+        weighted_moves[i] += weights[8] * getCanMoveToFinalGoal(newPos);
+        weighted_moves[i] += weights[9] * getMoveInWinLine(currPos, newPos);
     }
 
     //select the index of the biggest value as the best move
@@ -74,6 +79,21 @@ int ludo_player_evol::make_decision(){
     int chosenPiece = it - weighted_moves.begin();
 
     return chosenPiece; //dereference from iterator
+}
+
+int ludo_player_evol::getCanMoveToFinalGoal(int newPos)
+{
+    if (newPos == 56)
+        return 1;
+    else return 0;
+}
+
+int ludo_player_evol::getMoveInWinLine(int currPos, int newPos)
+{
+    if (currPos > 50 && newPos != 56 && currPos < 99)
+        return -1;
+    else
+        return 0;
 }
 
 void ludo_player_evol::start_turn(positions_and_dice relative){

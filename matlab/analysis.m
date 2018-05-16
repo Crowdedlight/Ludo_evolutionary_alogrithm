@@ -65,8 +65,8 @@ end
     for iter=1:2:N*2
         name = subFolders(NN).name;
         NN = NN + 1;
-        Legend{iter}=strcat('best - ', name);
-        Legend{iter+1}=strcat('avg - ', name);
+        Legend{iter}=strcat('best-', name);
+        Legend{iter+1}=strcat('avg-', name);
     end
     
     legend(Legend,'Location','southeast');

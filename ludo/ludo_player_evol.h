@@ -30,6 +30,8 @@ private:
     int getKilledByPlayer(int pos);
     int getCanMoveToGoal(int pos);
     int getRiskOfKill(int pos, int piece);
+    int getCanMoveToFinalGoal(int newPos);
+    int getMoveInWinLine(int currPos, int newPos);
 
 public:
     ludo_player_evol();
