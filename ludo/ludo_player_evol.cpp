@@ -6,43 +6,73 @@ ludo_player_evol::ludo_player_evol():
     dice_roll(0),
     weights(10)
 {
-    //test - Set by myself
-//    weights[0] = 1;
-//    weights[1] = 2;
-//    weights[2] = 1.6;
-//    weights[3] = 50;
-//    weights[4] = 1.5;
-//    weights[5] = 100;
-//    weights[6] = 0.4;
-//    weights[7] = 3.4;
 
     //pop50_100games_high_birth_10mutation_87winrate - New State space => random => 72% win => better_player => 58% (even with 40000 games)
-    weights[0] = 0.9876136;
-    weights[1] = 2.182484;
-    weights[2] = 0.4729599;
-    weights[3] = 16.68211;
-    weights[4] = 8.582215;
-    weights[5] = 18.25736;
-    weights[6] = 1.579915;
-    weights[7] = 2.771717;
-    weights[8] = 2.537776;
-    weights[9] = 9.984499;
+//    weights[0] = 0.9876136;
+//    weights[1] = 2.182484;
+//    weights[2] = 0.4729599;
+//    weights[3] = 16.68211;
+//    weights[4] = 8.582215;
+//    weights[5] = 18.25736;
+//    weights[6] = 1.579915;
+//    weights[7] = 2.771717;
+//    weights[8] = 2.537776;
+//    weights[9] = 9.984499;
 
+    //pop50_400games_15mutation_std_player_5tournement_70winrate => std_player = 64%, rnd_player => 73.5%
+//    weights[0] = 0.6944069;
+//    weights[1] = 0.6717764;
+//    weights[2] = 9.501631;
+//    weights[3] = 17.55049;
+//    weights[4] = 2.310473;
+//    weights[5] = 19.36788;
+//    weights[6] = 0.03788386;
+//    weights[7] = 3.350981;
+//    weights[8] = 19.47957;
+//    weights[9] = 17.63357;
 
-    //pop50_250games_high_birth_5mutation_81winrate
-//    weights[0] = 0.3336691;
-//    weights[1] = -0.6562978;
-//    weights[2] = 1.713695;
-//    weights[3] = 17.35723;
-//    weights[4] = 4.465443;
-//    weights[5] = 7.512275;
-//    weights[6] = 1.168676;
-//    weights[7] = -0.8972499;
+    //pop20-500games-2mutation-2range-std-player-4tournement-71winrate => std_player = 64%, rnd_player => 75%
+//    weights[0] = 1.197837;
+//    weights[1] = 1.573046;
+//    weights[2] = 3.795465;
+//    weights[3] = 21.79104;
+//    weights[4] = 7.847966;
+//    weights[5] = 22.5676;
+//    weights[6] = 0.2055403;
+//    weights[7] = 7.158788;
+//    weights[8] = 2.213074;
+//    weights[9] = 14.3692;
+
+    //pop50_1000games_15mutation_std_player_5tournement_67winrate => std_player = 62%, rnd_player => 72%
+//      weights[0] = 2.493465;
+//      weights[1] = 0.2922797;
+//      weights[2] = 4.362934;
+//      weights[3] = 18.18057;
+//      weights[4] = 2.310473;
+//      weights[5] = 18.41575;
+//      weights[6] = 0.4715767;
+//      weights[7] = -0.3893194;
+//      weights[8] = 13.23819;
+//      weights[9] = 12.24183;
+
+    //pop20_1000games_2mutation_2range_std_player_4tournement_70winrate => std_player = 66%, rnd_player => 76%
+    weights[0] = 0.4010978;
+    weights[1] = 0.6720623;
+    weights[2] = 3.774511;
+    weights[3] = 17.25477;
+    weights[4] = 4.38893;
+    weights[5] = 18.55596;
+    weights[6] = 0.3250972;
+    weights[7] = 11.13567;
+    weights[8] = 6.814829;
+    weights[9] = 20.42609;
+
 }
 
 int ludo_player_evol::make_decision(){
     //init empty moves vector, all at 0
     std::vector<float> weighted_moves(4, 0);
+    std::vector<float> weighted_moves2(4, 0);
 
     // loop though pieces
     for (int i = 0; i < 4; i++)

@@ -3,12 +3,12 @@
 PopulationManager::PopulationManager():
     id_counter(0),
     generationID(0),
-    pop_size(50),
+    pop_size(20),//was 50 before
     specimen_weights_num(10),
-    convergingPoint(400),
-    tournementSize(10),
-    mutation_probability(15), //was 10 before
-    mutation_range(0.5), //was 0.5% before
+    convergingPoint(1000),
+    tournementSize(4), //was 5 before
+    mutation_probability(2), //was 15 before
+    mutation_range(2), //was 0.5% before
     loadPrevGeneration(false),
     generationSaveLocation("../generations/"),
     rd(),
@@ -270,11 +270,11 @@ specimen PopulationManager::makeChild(int dad_id, int mum_id)
 
 std::vector<int> PopulationManager::makeTournement(int offsprings)
 {
-    //make double as many tournements as offsprings.
+    //make as many tournements as offsprings +2.
     std::vector<int> winners;
     std::vector<specimen> specimenList = population;
 
-    //always have at least 2 parents TODO for low offsprings handling. Max amount of 6 parents from population of 20 => 120 possible childs
+    //always have at least 2 parents
     for (auto i = 0; i < offsprings+2; i++)
     {
         //select randoms for tournement

@@ -36,19 +36,20 @@ for ds = subFolders'
     winrate = zeros(1,length(files));
     winrate_avg = zeros(1,length(files));
     i = 1;
-
+   
     for file = files'
         filePath = strcat(file.folder, '/', file.name);
         YamlStruct = ReadYaml(filePath);
 
+        pop_size = length(YamlStruct.win0x2Drate);
         %take first population with best winrate and save for plot
         best = YamlStruct.population{1};
         winrate(i) = best.win_rate;   
         wra = 0;
-        for j = 1 : 50
+        for j = 1 : pop_size
             wra = wra + YamlStruct.population{j}.win_rate;
         end
-        winrate_avg(i) = wra/50;
+        winrate_avg(i) = wra/pop_size;
         
         i = i+1;
     end

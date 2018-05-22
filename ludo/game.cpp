@@ -246,7 +246,7 @@ void game::turnComplete(bool win){
     turn_complete = true;
     if(game_complete){
         player_wins[color]++;
-        std::cout << "player0: " << player_wins[0] << " wins, player1: " << player_wins[1] << " wins, player2: " << player_wins[2] << " wins, player3: " << player_wins[3] << " wins" << std::endl;
+//        std::cout << "player0: " << player_wins[0] << " wins, player1: " << player_wins[1] << " wins, player2: " << player_wins[2] << " wins, player3: " << player_wins[3] << " wins" << std::endl;
         emit declare_winner(color);
     }
 }
@@ -262,12 +262,13 @@ void game::run() {
                 turn_complete = false;
                 msleep(game_delay/4);
                 next_turn(game_delay - game_delay/4);
-            }
+            }            
         }
         // only reset and go for next game if allowed by population manager ==> Flow control
-//        while (!start_next_game) {};
+        while (!start_next_game) {};
         reset();
         start_next_game = false;
+
         i++;
     }
     msleep(2);
