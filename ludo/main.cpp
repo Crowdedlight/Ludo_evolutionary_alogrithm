@@ -7,6 +7,7 @@
 #include "ludo_player.h"
 #include "positions_and_dice.h"
 #include "populationmanager.h"
+#include "rl_player.h"
 
 Q_DECLARE_METATYPE( positions_and_dice )
 
@@ -17,7 +18,8 @@ int main(int argc, char *argv[]){
     //instanciate the players here
     ludo_player_evol p1;
 //    ludo_player_random p2, p3, p4;
-    ludo_player p2, p3, p4;
+//    ludo_player p2, p3, p4;
+    rl_player p2, p3, p4;
 
     PopulationManager pm;
 
@@ -59,13 +61,13 @@ int main(int argc, char *argv[]){
 
 
     //setup for populationmanager
-    QObject::connect(&pm, SIGNAL(next_game(bool)),                       &g,SLOT(runNextGame(bool)));
-    QObject::connect(&g,  SIGNAL(declare_winner(int)),                   &pm,SLOT(get_winner(int)));
-    QObject::connect(&pm, SIGNAL(changeSpecimen(std::vector<float>)),    &p1,SLOT(changeSpecimen(std::vector<float>)));
-    QObject::connect(&p1, SIGNAL(SpecimenChanged()),                     &pm,SLOT(specimenChanged()));
+//    QObject::connect(&pm, SIGNAL(next_game(bool)),                       &g,SLOT(runNextGame(bool)));
+//    QObject::connect(&g,  SIGNAL(declare_winner(int)),                   &pm,SLOT(get_winner(int)));
+//    QObject::connect(&pm, SIGNAL(changeSpecimen(std::vector<float>)),    &p1,SLOT(changeSpecimen(std::vector<float>)));
+//    QObject::connect(&p1, SIGNAL(SpecimenChanged()),                     &pm,SLOT(specimenChanged()));
 
-    //init populationmanager now everything is created and set
-    pm.init();
+//    //init populationmanager now everything is created and set
+//    pm.init();
 
     // start game loop in thread
     g.start();

@@ -4,7 +4,7 @@
 game::game():
     game_complete(true),
     turn_complete(true),
-    game_delay(1000),
+    game_delay(0),
     relative(),
     dice_result(1),
     rd(),
@@ -138,7 +138,8 @@ void game::movePiece(int relative_piece){
     } else {
         //convert to relative position
         if(relative_pos == 99){
-            std::cout << "I tought this would be it ";
+            //std::cout << "I tought this would be it ";
+            int sdgs = 0;
         } else if(relative_pos == 51){ //if people land on 51, they shouldn't be sent to goal stretch
             switch(color){
             case 0 : relative_pos = 51; break;
@@ -254,23 +255,60 @@ void game::turnComplete(bool win){
 void game::run() {
     if(DEBUG) std::cout << "color:     relative pos => fixed\n";
 
-    int i = 0;
-    while(i < 40000) // TODO add termination condition of amount of generations or delta of improvement from generation to generation
-    {
-        while(!game_complete){
-            if(turn_complete){
-                turn_complete = false;
-                msleep(game_delay/4);
-                next_turn(game_delay - game_delay/4);
-            }            
-        }
-        // only reset and go for next game if allowed by population manager ==> Flow control
-        while (!start_next_game) {};
-        reset();
-        start_next_game = false;
+//    int i = 0;
+//    while(true) // TODO add termination condition of amount of generations or delta of improvement from generation to generation
+//    {
+//        while(!game_complete){
+//            if(turn_complete){
+//                turn_complete = false;
+//                msleep(game_delay/4);
+//                next_turn(game_delay - game_delay/4);
+//            }
+//        }
+//        // only reset and go for next game if allowed by population manager ==> Flow control
+//        while (!start_next_game) {};
+//        reset();
+//        start_next_game = false;
 
-        i++;
+//        i++;
+//    }
+
+    //test loop
+//    std:vector<vector<int>> result_vector;
+
+    //save to csv
+    std::ofstream csv_out;
+    csv_out.open("../tests/test.csv");
+
+    for (int i = 0; i < 100; i++)
+    {
+        for (int j = 0; j < 10000; j++)
+        {
+            while(!game_complete){
+                if(turn_complete){
+                    turn_complete = false;
+                    msleep(game_delay/4);
+                    next_turn(game_delay - game_delay/4);
+                }
+            }
+            reset();
+        }
+
+        reset();
+
+        csv_out << player_wins[0] << "," << player_wins[1] << "," << player_wins[2] << "," << player_wins[3] << std::endl;
+        std::cout << "Game: " << i << ", player0: " << (float)player_wins[0]/(float)10000 << " wins, player1: " << (float)player_wins[1]/(float)10000 << " wins, player2: " << (float)player_wins[2]/(float)10000 << " wins, player3: " << (float)player_wins[3]/(float)10000 << " wins" << std::endl;
+
+        //reset scores for next experiment
+        player_wins[0] = 0;
+        player_wins[1] = 0;
+        player_wins[2] = 0;
+        player_wins[3] = 0;
     }
+
+    //close file
+    csv_out.close();
+
     msleep(2);
     emit close();
 }

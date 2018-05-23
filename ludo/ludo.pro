@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     ludo_player.cpp \
     ludo_player_random.cpp \
     ludo_player_evol.cpp \
-    populationmanager.cpp
+    populationmanager.cpp \
+    rl_player.cpp
 
 HEADERS  += dialog.h \
     game.h \
@@ -26,7 +27,8 @@ HEADERS  += dialog.h \
     positions_and_dice.h \
     ludo_player_random.h \
     ludo_player_evol.h \
-    populationmanager.h
+    populationmanager.h \
+    rl_player.h
 
 FORMS    += dialog.ui
 

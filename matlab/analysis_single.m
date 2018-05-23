@@ -63,12 +63,13 @@ legend(Legend,'Location','southeast');
     
 hold off;
 
-figure;
+f2 = figure;
+set(f2,'renderer','Painters')
 % axis
 xlabel('Generation');
 ylabel('Win Rate');
 % trim data, to actual show intersting parts
-trimmedData = all_winrates(1:1700,:);
-every_ten_gen = all_winrates(20:20:end,:);
+% trimmedData = all_winrates(1:1700,:);
+every_ten_gen = all_winrates(10:10:end,:);
 boxplot(transpose(every_ten_gen),'PlotStyle','compact')
     
