@@ -7,7 +7,7 @@ PopulationManager::PopulationManager():
     specimen_weights_num(10),
     convergingPoint(1000),
     tournementSize(4), //was 5 before
-    mutation_probability(1), //was 15 before
+    mutation_probability(2), //was 15 before
     mutation_range(2), //was 0.5% before
     loadPrevGeneration(false),
     generationSaveLocation("../generations/"),
