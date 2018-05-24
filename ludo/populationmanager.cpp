@@ -28,7 +28,7 @@ void PopulationManager::init()
         std::vector<float> newW(specimen_weights_num, 0);
         for (auto i = 0; i < specimen_weights_num; i++)
         {
-            std::uniform_real_distribution<> weight(0, 20);
+            std::uniform_real_distribution<> weight(0, 60);
             float value = weight(gen);
             newW[i] = value;
         }

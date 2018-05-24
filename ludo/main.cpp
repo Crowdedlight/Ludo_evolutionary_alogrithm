@@ -61,13 +61,13 @@ int main(int argc, char *argv[]){
 
 
     //setup for populationmanager
-//    QObject::connect(&pm, SIGNAL(next_game(bool)),                       &g,SLOT(runNextGame(bool)));
-//    QObject::connect(&g,  SIGNAL(declare_winner(int)),                   &pm,SLOT(get_winner(int)));
-//    QObject::connect(&pm, SIGNAL(changeSpecimen(std::vector<float>)),    &p1,SLOT(changeSpecimen(std::vector<float>)));
-//    QObject::connect(&p1, SIGNAL(SpecimenChanged()),                     &pm,SLOT(specimenChanged()));
+    QObject::connect(&pm, SIGNAL(next_game(bool)),                       &g,SLOT(runNextGame(bool)));
+    QObject::connect(&g,  SIGNAL(declare_winner(int)),                   &pm,SLOT(get_winner(int)));
+    QObject::connect(&pm, SIGNAL(changeSpecimen(std::vector<float>)),    &p1,SLOT(changeSpecimen(std::vector<float>)));
+    QObject::connect(&p1, SIGNAL(SpecimenChanged()),                     &pm,SLOT(specimenChanged()));
 
-//    //init populationmanager now everything is created and set
-//    pm.init();
+    //init populationmanager now everything is created and set
+    pm.init();
 
     // start game loop in thread
     g.start();
