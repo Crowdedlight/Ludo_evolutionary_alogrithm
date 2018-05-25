@@ -18,8 +18,8 @@ int main(int argc, char *argv[]){
     //instanciate the players here
     ludo_player_evol p1;
 //    ludo_player_random p2, p3, p4;
-//    ludo_player p2, p3, p4;
-    rl_player p2, p3, p4;
+    ludo_player p2, p3, p4;
+//    rl_player p2, p3, p4;
 
     PopulationManager pm;
 

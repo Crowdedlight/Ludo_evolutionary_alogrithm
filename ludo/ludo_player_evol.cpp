@@ -56,16 +56,16 @@ ludo_player_evol::ludo_player_evol():
 //      weights[9] = 12.24183;
 
     //pop20_1000games_2mutation_2range_std_player_4tournement_70winrate => std_player = 66%, rnd_player => 76%
-//    weights[0] = 0.4010978;
-//    weights[1] = 0.6720623;
-//    weights[2] = 3.774511;
-//    weights[3] = 17.25477;
-//    weights[4] = 4.38893;
-//    weights[5] = 18.55596;
-//    weights[6] = 0.3250972;
-//    weights[7] = 11.13567;
-//    weights[8] = 6.814829;
-//    weights[9] = 20.42609;
+    weights[0] = 0.4010978;
+    weights[1] = 0.6720623;
+    weights[2] = 3.774511;
+    weights[3] = 17.25477;
+    weights[4] = 4.38893;
+    weights[5] = 18.55596;
+    weights[6] = 0.3250972;
+    weights[7] = 11.13567;
+    weights[8] = 6.814829;
+    weights[9] = 20.42609;
 
 }
 
